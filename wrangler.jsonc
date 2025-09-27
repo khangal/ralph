@@ -1,0 +1,47 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "my-app",
+  "compatibility_date": "2025-05-23",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      // The service should match the "name" of your worker
+      "service": "my-app",
+    },
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB", // You can name this whatever you want
+      "database_name": "ralph", // This is the name you used when creating it
+      // "database_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", // Fill in the actual ID
+      "database_id": "LOCAL", // Fill in the actual ID
+      "migrations_dir": "drizzle",
+      "migrations_table": "__drizzle_migrations"
+    }
+  ],
+  "env": {
+    "production": {
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "ralph-prod", // This is the name you used when creating it
+          "database_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", // Fill in the actual ID
+          "migrations_dir": "drizzle",
+          "migrations_table": "__drizzle_migrations"
+        }
+      ],
+    }
+  },
+  "minify": true,
+  "observability": {
+    "enabled": true
+  },
+}
