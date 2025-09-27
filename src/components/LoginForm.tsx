@@ -2,10 +2,7 @@
 
 import { authClient } from "@/lib/auth-client";
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+export function LoginForm({}: React.ComponentProps<"div">) {
   const onSubmit = async () => {
     const data = await authClient.signIn.social({
       provider: "google",

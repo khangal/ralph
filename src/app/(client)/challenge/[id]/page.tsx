@@ -4,6 +4,7 @@ import { useChallenge } from "@/query-hooks/useChallenge";
 import { useToggleChallenge } from "@/query-hooks/useCompleteChallenge";
 import { useCompletions } from "@/query-hooks/useCompletions";
 import { useUsers } from "@/query-hooks/useUsers";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -121,7 +122,7 @@ export default function ChallengePage() {
                     <th className="bg-base-100 z-100">
                       <div className="avatar">
                         <div className="w-10 rounded-full">
-                          <img src={user.image || ""} alt={user.name} />
+                          <Image width="30" height="30" src={user.image || ""} alt={user.name} />
                         </div>
                       </div>
                     </th>

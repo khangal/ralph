@@ -33,7 +33,7 @@
         {
           "binding": "DB",
           "database_name": "ralph-prod", // This is the name you used when creating it
-          "database_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", // Fill in the actual ID
+          "database_id": "92c8f3fd-09ea-4bb7-9629-69ccb53ee235", // Fill in the actual ID
           "migrations_dir": "drizzle",
           "migrations_table": "__drizzle_migrations"
         }

@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils"
 import { useUsers } from "@/query-hooks/useUsers"
+import Image from "next/image"
 
 export const UserList = ({ className }: { className?: string }) => {
   const { data } = useUsers()
@@ -22,7 +23,7 @@ export const UserList = ({ className }: { className?: string }) => {
                 <div className="flex items-center gap-3">
                   <div className="avatar">
                     <div className="w-10 rounded-full">
-                      <img src={u.image || ""} alt={`avatar of ${u.name}`} />
+                      <Image width="30" height="30" src={u.image || ""} alt={u.name} />
                     </div>
                   </div>
                   <div>
