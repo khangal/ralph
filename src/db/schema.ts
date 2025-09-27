@@ -1,8 +1,5 @@
-import {
-  integer,
-  sqliteTable,
-  text
-} from "drizzle-orm/sqlite-core";
+import { sql } from "drizzle-orm";
+import { integer, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
 
 export const user = sqliteTable("user", {
   id: text("id").primaryKey(),
@@ -63,28 +60,55 @@ export const verification = sqliteTable("verification", {
   updatedAt: integer("updated_at", { mode: "timestamp" }),
 });
 
-export const challenge = sqliteTable("challenge", {
-  id: text("id").primaryKey(),
+export const challenges = sqliteTable("challenges", {
+  id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
   title: text("title").notNull(),
-  description: text("description"),
-  tenant_id: text("tenant_id").notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+  description: text("description").notNull(),
+  tenantId: text("tenant_id").notNull(),
+  startAt: integer("start_at", { mode: "timestamp" }).notNull(),
+  endAt: integer("end_at", { mode: "timestamp" }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`)
+    .$onUpdate(() => new Date()),
 });
 
-export const userChallenge = sqliteTable("user_challenge", {
-  id: text("id").primaryKey(),
-  userId: text("user_id").notNull().references(() => user.id),
-  challengeId: text("challenge_id").notNull().references(() => challenge.id),
-  completedAt: integer("completed_at", { mode: "timestamp" }),
-  tenant_id: text("tenant_id").notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
-});
+export const completions = sqliteTable(
+  "completions",
+  {
+    id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id),
+    challengeId: text("challenge_id")
+      .notNull()
+      .references(() => challenges.id),
+    completedAt: integer("completed_at", { mode: "timestamp" }).notNull(),
+    tenantId: text("tenant_id").notNull(),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .default(sql`(unixepoch())`)
+      .notNull(),
+    updatedAt: integer("updated_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`)
+      .$onUpdate(() => new Date()),
+  },
+  (t) => [
+    unique().on(t.userId, t.challengeId, t.completedAt),
+  ],
+);
 
 export const tenants = sqliteTable("tenants", {
   id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
   slug: text("slug").notNull().unique(),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
-})
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`)
+    .$onUpdate(() => new Date()),
+});
