@@ -1,1 +1,0 @@
-CREATE UNIQUE INDEX `completions_user_id_challenge_id_completed_at_unique` ON `completions` (`user_id`,`challenge_id`,`completed_at`);

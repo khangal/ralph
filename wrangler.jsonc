@@ -32,8 +32,8 @@
       "d1_databases": [
         {
           "binding": "DB",
-          "database_name": "ralph-prod", // This is the name you used when creating it
-          "database_id": "92c8f3fd-09ea-4bb7-9629-69ccb53ee235", // Fill in the actual ID
+          "database_name": "ralph", // This is the name you used when creating it
+          "database_id": "ce3bac51-5035-4aae-88b2-bc668a529a35", // Fill in the actual ID
           "migrations_dir": "drizzle",
           "migrations_table": "__drizzle_migrations"
         }
