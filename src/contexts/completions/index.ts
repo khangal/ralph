@@ -1,6 +1,6 @@
 import { db } from "@/db";
-import { completions, user } from "@/db/schema";
-import { and, desc, eq } from "drizzle-orm";
+import { completions } from "@/db/schema";
+import { and, eq } from "drizzle-orm";
 
 export type CreateCompletion = typeof completions.$inferInsert;
 export type Completion = typeof completions.$inferSelect;
@@ -22,8 +22,8 @@ export const findCompletionsByChallengeId = async (challengeId: string) => {
     })
     .from(completions)
     // .innerJoin(user, eq(user.id, completions.userId))
-    .where(eq(completions.challengeId, challengeId))
-    // .orderBy(desc(completions.completedAt), desc(completions.createdAt));
+    .where(eq(completions.challengeId, challengeId));
+  // .orderBy(desc(completions.completedAt), desc(completions.createdAt));
 
   return result;
 };
