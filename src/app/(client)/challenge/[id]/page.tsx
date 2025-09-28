@@ -11,6 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { format } from "date-fns";
 
 export default function ChallengePage() {
   const params = useParams();
@@ -184,8 +185,8 @@ export default function ChallengePage() {
               {logs.map((log, index) => (
                 <li key={`log-${index}`}>
                   {index > 0 && <hr />}
-                  <div className="timeline-start">
-                    {log.date}
+                  <div className="timeline-start text-sm">
+                    { format(log.createdAt, "yyyy-MM-dd HH:mm:ss") }
                   </div>
                   <div className="timeline-middle">
                     <svg
@@ -206,7 +207,7 @@ export default function ChallengePage() {
                       {log.userName}
                     </span>{" "}
                     <span className="text-base-content/70">
-                      completed the challenge
+                      completed <span className="font-bold">{ log.date }</span>
                     </span>
                   </div>
                   {index < logs.length - 1 && <hr />}

@@ -21,11 +21,12 @@ export const findLogsByChallengeId = async (challengeId: string) => {
       challengeId: completions.challengeId,
       userName: user.name,
       completedAt: completions.completedAt,
+      createdAt: completions.createdAt,
     })
     .from(completions)
     .innerJoin(user, eq(user.id, completions.userId))
     .where(eq(completions.challengeId, challengeId))
-    .orderBy(desc(completions.completedAt), desc(completions.createdAt));
+    .orderBy(desc(completions.createdAt));
 
   return result.map(log => ({
     ...log,
