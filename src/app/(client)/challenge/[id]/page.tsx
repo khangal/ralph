@@ -1,16 +1,21 @@
 "use client";
 
+import PencilEdit from "@/components/icons/pencil-edit";
+import { authClient } from "@/lib/auth-client";
 import { useChallenge } from "@/query-hooks/useChallenge";
 import { useToggleChallenge } from "@/query-hooks/useCompleteChallenge";
 import { useCompletions } from "@/query-hooks/useCompletions";
 import { useUsers } from "@/query-hooks/useUsers";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function ChallengePage() {
   const params = useParams();
   const challengeId = params.id as string;
+
+  const { data } = authClient.useSession();
 
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const { data: challenge } = useChallenge(challengeId);
@@ -84,11 +89,20 @@ export default function ChallengePage() {
     challenge && (
       <div className="flex flex-col gap-6 pt-6">
         <div className="max-w-6xl mx-auto p-6 space-y-8">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold">{challenge.title}</h1>
-            <p className="text-sm opacity-70">
-              {currentDate.toDateString()} - {end.toDateString()}
-            </p>
+          <div className="relative">
+            <div className="text-center mx-auto max-w-xl">
+              <h1 className="text-3xl font-bold">{challenge.title}</h1>
+
+              <p className="text-sm opacity-70 my-2">{challenge.description}</p>
+
+              <p className="text-sm opacity-70">
+                {currentDate.toDateString()} - {end.toDateString()}
+              </p>
+            </div>
+
+            <Link href={`/challenge/${challengeId}/edit`} className="absolute top-0 right-0">
+              <PencilEdit size={24} />
+            </Link>
           </div>
 
           {/* Progress Calendar */}
@@ -117,39 +131,52 @@ export default function ChallengePage() {
                 </tr>
               </thead>
               <tbody>
-                {(participants || []).map((user) => (
-                  <tr key={user.id}>
-                    <th className="bg-base-100 z-100">
-                      <div className="avatar">
-                        <div className="w-10 rounded-full">
-                          <Image width="30" height="30" src={user.image || ""} alt={user.name} />
+                {(participants || [])
+                  .sort((a, b) => {
+                    if (a.id === data?.user.id) return -1;
+                    if (b.id === data?.user.id) return 1;
+                    return 0;
+                  })
+                  .map((user) => (
+                    <tr key={user.id}>
+                      <th className="bg-base-100 z-100">
+                        <div className="avatar">
+                          <div className="w-10 rounded-full">
+                            <Image
+                              width="30"
+                              height="30"
+                              src={user.image || ""}
+                              alt={user.name}
+                            />
+                          </div>
                         </div>
-                      </div>
-                    </th>
+                      </th>
 
-                    {completions &&
-                      calendarDays.map((day, index) => {
-                        return (
-                          <td
-                            key={`${index}-${day.toISOString()}`}
-                            className="text-center"
-                          >
-                            <label>
-                              <input
-                                type="checkbox"
-                                className="checkbox"
-                                checked={
-                                  checked[`${user.id}-${day.toISOString()}`] ||
-                                  false
-                                }
-                                onChange={() => handleChange(user.id, day)}
-                              />
-                            </label>
-                          </td>
-                        );
-                      })}
-                  </tr>
-                ))}
+                      {completions &&
+                        calendarDays.map((day, index) => {
+                          return (
+                            <td
+                              key={`${index}-${day.toISOString()}`}
+                              className="text-center"
+                            >
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  className="checkbox disabled:opacity-100 disabled:cursor-not-allowed"
+                                  disabled={user.id !== data?.user.id}
+                                  checked={
+                                    checked[
+                                      `${user.id}-${day.toISOString()}`
+                                    ] || false
+                                  }
+                                  onChange={() => handleChange(user.id, day)}
+                                />
+                              </label>
+                            </td>
+                          );
+                        })}
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>

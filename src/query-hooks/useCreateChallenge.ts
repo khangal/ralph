@@ -1,17 +1,14 @@
+import { ChallengeFront } from "@/contexts/challenge/types";
 import { useMutation } from "@tanstack/react-query";
 
 export type ChallengeInput = {
   title: string;
   description: string;
+  startAt: string;
+  endAt: string;
 };
 
-export type Challenge = ChallengeInput & {
-  id: string;
-  createdAt: string;
-  // add other fields returned by backend
-};
-
-async function createChallenge(data: ChallengeInput): Promise<Challenge> {
+async function createChallenge(data: ChallengeInput): Promise<ChallengeFront> {
   const res = await fetch("/api/challenge", {
     method: "POST",
     headers: {
@@ -33,13 +30,13 @@ export function useCreateChallenge() {
   return useMutation({
     mutationFn: createChallenge,
     // onSuccess: (newChallenge) => {
-      // 🔄 Invalidate or update cached challenges
-      // queryClient.invalidateQueries({ queryKey: ["challenges"] });
+    // 🔄 Invalidate or update cached challenges
+    // queryClient.invalidateQueries({ queryKey: ["challenges"] });
 
-      // or optimistically update:
-      // queryClient.setQueryData<Challenge[]>(["challenges"], (old) =>
-      //   old ? [...old, newChallenge] : [newChallenge]
-      // );
+    // or optimistically update:
+    // queryClient.setQueryData<Challenge[]>(["challenges"], (old) =>
+    //   old ? [...old, newChallenge] : [newChallenge]
+    // );
     // },
   });
 }

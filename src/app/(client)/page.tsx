@@ -1,6 +1,7 @@
-"use client"
+"use client";
 
 import { ChallengeListingItem } from "@/components/challenge/ChallengeListingItem";
+import GitHubIcon from "@/components/icons/github";
 import { UserList } from "@/components/user/UserList";
 import { useChallenges } from "@/query-hooks/useChallenges";
 import Link from "next/link";
@@ -16,7 +17,9 @@ export default function DashboardUsersPage() {
         <header className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
           <div>
             <h1 className="text-3xl font-bold">Battle arena</h1>
-            <p className="text-sm opacity-70">Challenges are the heart of progress</p>
+            <p className="text-sm opacity-70">
+              Challenges are the heart of progress
+            </p>
           </div>
           <div className="flex items-center gap-3 w-full md:w-auto">
             {/* <input */}
@@ -26,7 +29,9 @@ export default function DashboardUsersPage() {
             {/*   placeholder="Search users..." */}
             {/*   className="input input-bordered w-full md:w-64" */}
             {/* /> */}
-            <Link href="/challenge/new" className="btn btn-primary">New Challenge</Link>
+            <Link href="/challenge/new" className="btn btn-primary">
+              New Challenge
+            </Link>
           </div>
         </header>
 
@@ -61,7 +66,14 @@ export default function DashboardUsersPage() {
         <UserList className="mt-4 max-w-md mx-auto w-full" />
 
         <footer className="mt-8 text-center text-xs opacity-60">
-          Built with ❤️ — Tailwind + DaisyUI
+          <a
+            href="https://github.com/khangal/ralph"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            ❤️ To contribute, visit on GitHub.
+            <GitHubIcon size={16} className="inline mb-0.5 mx-1" />
+          </a>
         </footer>
       </div>
     </div>

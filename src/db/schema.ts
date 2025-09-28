@@ -101,6 +101,24 @@ export const completions = sqliteTable(
   ],
 );
 
+export const participations = sqliteTable("participations", {
+  id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id),
+  challengeId: text("challenge_id")
+    .notNull()
+    .references(() => challenges.id),
+  tenantId: text("tenant_id").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`)
+    .$onUpdate(() => new Date()),
+});
+
 export const tenants = sqliteTable("tenants", {
   id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
   slug: text("slug").notNull().unique(),

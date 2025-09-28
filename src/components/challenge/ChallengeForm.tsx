@@ -8,11 +8,8 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { useRouter } from "next/navigation";
 import DatePicker from "../ui/DatePicker";
-
-type ChallengeForm = {
-  title: string;
-  description: string;
-};
+import { ChallengeFront } from "@/contexts/challenge/types";
+import { useUpdateChallenge } from "@/query-hooks/useUpdateChallenge";
 
 const schema = z.object({
   title: z.string(),
@@ -21,9 +18,16 @@ const schema = z.object({
   endAt: z.string().nonempty("End date is required"),
 });
 
-export default function NewChallengeForm() {
+export default function ChallengeForm({
+  challenge,
+  action
+}: {
+    action: "create" | "edit";
+    challenge?: ChallengeFront
+  }) {
   const router = useRouter();
-  const { mutateAsync } = useCreateChallenge();
+  const { mutateAsync: create } = useCreateChallenge();
+  const { mutateAsync: update } = useUpdateChallenge();
 
   const {
     register,
@@ -33,17 +37,21 @@ export default function NewChallengeForm() {
     reset,
   } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: {
+    defaultValues: challenge ? challenge : {
       title: "",
       description: "",
     },
   });
 
-  const onSubmit = async (data: ChallengeForm) => {
-    await mutateAsync(data);
+  const onSubmit = async (data: z.infer<typeof schema>) => {
+    if (action === "edit") {
+      await update({ ...data, id: challenge!.id })
+      // 👉 implement edit functionality
+      router.push(`/challenge/${challenge!.id}`);
+      return;
+    }
 
-    // 👉 replace with API call
-    // await fetch("/api/challenges", { method: "POST", body: JSON.stringify(data) });
+    await create(data);
     reset();
 
     router.push("/");
@@ -52,7 +60,12 @@ export default function NewChallengeForm() {
   return (
     <div className="card max-w-md w-full">
       <div className="card-body">
-        <h2 className="card-title">Create New Challenge</h2>
+        {
+          action === "edit" ? (
+            <h2 className="card-title">Edit "{challenge!.title}"</h2>
+          ) : <h2 className="card-title">Create New Challenge</h2>
+        }
+        
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <fieldset className="fieldset">
@@ -121,35 +134,15 @@ export default function NewChallengeForm() {
             )}
           </fieldset>
 
-          {/* <fieldset className="fieldset"> */}
-          {/*   <legend className="fieldset-legend">Start at</legend> */}
-          {/**/}
-          {/*   <button type="button" popoverTarget="rdp-popover" className="input input-border" style={{ anchorName: "--rdp" } as React.CSSProperties}> */}
-          {/*     {startAt ? startAt.toLocaleDateString() : "Pick a date"} */}
-          {/*   </button> */}
-          {/*   <div popover="auto" id="rdp-popover" className="dropdown" style={{ positionAnchor: "--rdp" } as React.CSSProperties}> */}
-          {/*     <DayPicker className="react-day-picker" mode="single" selected={startAt} onSelect={setStartAt} /> */}
-          {/*   </div> */}
-          {/* </fieldset> */}
-          {/**/}
-          {/* <fieldset className="fieldset"> */}
-          {/*   <legend className="fieldset-legend">End at</legend> */}
-          {/**/}
-          {/*   <button type="button" popoverTarget="rdp-popover" className="input input-border" style={{ anchorName: "--rdp" } as React.CSSProperties}> */}
-          {/*     {startAt ? startAt.toLocaleDateString() : "Pick a date"} */}
-          {/*   </button> */}
-          {/*   <div popover="auto" id="rdp-popover" className="dropdown" style={{ positionAnchor: "--rdp" } as React.CSSProperties}> */}
-          {/*     <DayPicker className="react-day-picker" mode="single" selected={startAt} onSelect={setStartAt} /> */}
-          {/*   </div> */}
-          {/* </fieldset> */}
-          {/**/}
           <div className="form-control mt-6">
             <button
               type="submit"
               disabled={isSubmitting}
               className="btn btn-primary"
             >
-              {isSubmitting ? "Creating..." : "Create Challenge"}
+              {
+                action === "edit" ? "Update Challenge" : "Create Challenge"
+              }
             </button>
           </div>
         </form>
