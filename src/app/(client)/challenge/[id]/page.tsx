@@ -5,6 +5,7 @@ import { authClient } from "@/lib/auth-client";
 import { useChallenge } from "@/query-hooks/useChallenge";
 import { useToggleChallenge } from "@/query-hooks/useCompleteChallenge";
 import { useCompletions } from "@/query-hooks/useCompletions";
+import { useLogs } from "@/query-hooks/useLogs";
 import { useUsers } from "@/query-hooks/useUsers";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,6 +21,7 @@ export default function ChallengePage() {
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const { data: challenge } = useChallenge(challengeId);
   const { data: completions } = useCompletions(challengeId);
+  const { data: logs } = useLogs(challengeId)
   const { data: participants } = useUsers();
   const { mutateAsync: toggle } = useToggleChallenge();
 
@@ -66,14 +68,6 @@ export default function ChallengePage() {
         date.getDate().toString().padStart(2, "0"),
     });
   };
-
-  const logs = [
-    { date: new Date("2025-09-01"), user: { name: "Alice" } },
-    { date: new Date("2025-09-01"), user: { name: "Bob" } },
-    { date: new Date("2025-09-02"), user: { name: "Bob" } },
-    { date: new Date("2025-09-02"), user: { name: "Charlie" } },
-    { date: new Date("2025-09-03"), user: { name: "Alice" } },
-  ];
 
   // Generate calendar days from startDate to endDate
   const calendarDays: Date[] = [];
@@ -182,19 +176,16 @@ export default function ChallengePage() {
           </div>
         </div>
 
-        <div className="divider">Timeline: FEATURE COMING SOON</div>
+        <div className="divider">Timeline</div>
+        {/* <div className="divider">TODO: until real timeline implemented use completions</div> */}
         <div>
-          {logs.length > 0 ? (
+          {logs && logs.length > 0 ? (
             <ul className="timeline timeline-vertical">
               {logs.map((log, index) => (
                 <li key={`log-${index}`}>
                   {index > 0 && <hr />}
                   <div className="timeline-start">
-                    {log.date.toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
+                    {log.date}
                   </div>
                   <div className="timeline-middle">
                     <svg
@@ -212,7 +203,7 @@ export default function ChallengePage() {
                   </div>
                   <div className="timeline-end timeline-box">
                     <span className="font-semibold text-primary">
-                      {log.user.name}
+                      {log.userName}
                     </span>{" "}
                     <span className="text-base-content/70">
                       completed the challenge
@@ -223,7 +214,7 @@ export default function ChallengePage() {
               ))}
             </ul>
           ) : (
-            <p>No logs available.</p>
+            <p className="text-center">No logs available.</p>
           )}
         </div>
       </div>

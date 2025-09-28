@@ -1,5 +1,5 @@
 import { ChallengeFront } from "@/contexts/challenge/types";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export type ChallengeInput = {
   title: string;
@@ -25,18 +25,18 @@ async function createChallenge(data: ChallengeInput): Promise<ChallengeFront> {
 }
 
 export function useCreateChallenge() {
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: createChallenge,
-    // onSuccess: (newChallenge) => {
+    onSuccess: () => {
     // 🔄 Invalidate or update cached challenges
-    // queryClient.invalidateQueries({ queryKey: ["challenges"] });
+    queryClient.invalidateQueries({ queryKey: ["challenges"] });
 
     // or optimistically update:
     // queryClient.setQueryData<Challenge[]>(["challenges"], (old) =>
     //   old ? [...old, newChallenge] : [newChallenge]
     // );
-    // },
+    },
   });
 }

@@ -1,5 +1,5 @@
 import { ChallengeFront } from "@/contexts/challenge/types";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export type CompleteChallengeInput = {
   challengeId: string;
@@ -40,18 +40,13 @@ async function toggleChallenge(data: CompleteChallengeInput): Promise<ChallengeF
 }
 
 export function useToggleChallenge() {
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: toggleChallenge,
-    // onSuccess: (newChallenge) => {
-      // 🔄 Invalidate or update cached challenges
-      // queryClient.invalidateQueries({ queryKey: ["challenges"] });
-
-      // or optimistically update:
-      // queryClient.setQueryData<Challenge[]>(["challenges"], (old) =>
-      //   old ? [...old, newChallenge] : [newChallenge]
-      // );
-    // },
+    onSuccess: () => {
+      // TODO: Just update cache without invalidating query
+      queryClient.invalidateQueries({ queryKey: ["logs"] })
+    },
   });
 }

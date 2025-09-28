@@ -1,0 +1,35 @@
+import { db } from "@/db";
+import { completions, user } from "@/db/schema";
+import { formatToUlatDate } from "@/lib/time";
+import { desc, eq } from "drizzle-orm";
+
+export type LogFront = {
+  id: string;
+  userId: string;
+  challengeId: string;
+  userName: string
+  completedAt: string;
+  createdAt: string;
+  date: string
+}
+
+export const findLogsByChallengeId = async (challengeId: string) => {
+  const result = await db
+    .select({
+      id: completions.id,
+      userId: completions.userId,
+      challengeId: completions.challengeId,
+      userName: user.name,
+      completedAt: completions.completedAt,
+    })
+    .from(completions)
+    .innerJoin(user, eq(user.id, completions.userId))
+    .where(eq(completions.challengeId, challengeId))
+    .orderBy(desc(completions.completedAt), desc(completions.createdAt));
+
+  return result.map(log => ({
+    ...log,
+    date: formatToUlatDate(log.completedAt)
+  }))
+};
+
