@@ -62,7 +62,7 @@ export default function ChallengeForm({
       <div className="card-body">
         {
           action === "edit" ? (
-            <h2 className="card-title">Edit "{challenge!.title}"</h2>
+            <h2 className="card-title">Edit &quot;{challenge!.title}&quot;</h2>
           ) : <h2 className="card-title">Create New Challenge</h2>
         }
         
