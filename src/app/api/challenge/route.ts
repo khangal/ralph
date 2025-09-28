@@ -25,7 +25,13 @@ export async function POST(request: Request) {
   const startAt = parseIntUlat(parsed.startAt);
   const endAt = parseIntUlat(parsed.endAt);
 
-  await createChallenge({ ...parsed, tenantId: "default", startAt, endAt });
+  await createChallenge({
+    ...parsed,
+    tenantId: "default",
+    startAt,
+    endAt,
+    ownerId: sessionResult.user.id,
+  });
 
   return Response.json({
     success: true,

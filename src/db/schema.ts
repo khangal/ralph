@@ -64,6 +64,7 @@ export const challenges = sqliteTable("challenges", {
   id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
   title: text("title").notNull(),
   description: text("description").notNull(),
+  ownerId: text("owner_id").notNull().references(() => user.id),
   tenantId: text("tenant_id").notNull(),
   startAt: integer("start_at", { mode: "timestamp" }).notNull(),
   endAt: integer("end_at", { mode: "timestamp" }).notNull(),

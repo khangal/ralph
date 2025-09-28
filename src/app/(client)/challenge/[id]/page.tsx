@@ -87,9 +87,9 @@ export default function ChallengePage() {
 
   return (
     challenge && (
-      <div className="flex flex-col gap-6 pt-6">
+      <div className="flex flex-col gap-6 pt-6 relative">
         <div className="max-w-6xl mx-auto p-6 space-y-8">
-          <div className="relative">
+          <div>
             <div className="text-center mx-auto max-w-xl">
               <h1 className="text-3xl font-bold">{challenge.title}</h1>
 
@@ -100,8 +100,8 @@ export default function ChallengePage() {
               </p>
             </div>
 
-            <Link href={`/challenge/${challengeId}/edit`} className="absolute top-0 right-0">
-              <PencilEdit size={24} />
+            <Link href={`/challenge/${challengeId}/edit`} className="absolute top-0 right-0 lg:p-4 p-2">
+              <PencilEdit size={32} />
             </Link>
           </div>
 

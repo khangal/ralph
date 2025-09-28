@@ -1,11 +1,17 @@
 import { db } from "@/db";
 import { CreateChallenge } from "./types";
-import { challenges } from "@/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { challenges, user } from "@/db/schema";
+import { desc, eq, getTableColumns } from "drizzle-orm";
 import { firstOrNull } from "@/db/utils";
 
 export const findChallenges = async () => {
-  return await db.select().from(challenges).orderBy(desc(challenges.createdAt));
+  return await db.select({
+    ...getTableColumns(challenges),
+    owner: user.name,
+    ownerImage: user.image,
+  }).from(challenges)
+    .innerJoin(user, eq(challenges.ownerId, user.id))
+    .orderBy(desc(challenges.createdAt));
 };
 
 export const createChallenge = (params: CreateChallenge) => {
