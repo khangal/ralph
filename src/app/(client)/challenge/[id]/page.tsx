@@ -7,11 +7,12 @@ import { useToggleChallenge } from "@/query-hooks/useCompleteChallenge";
 import { useCompletions } from "@/query-hooks/useCompletions";
 import { useLogs } from "@/query-hooks/useLogs";
 import { useUsers } from "@/query-hooks/useUsers";
-import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
+import { CompletionTBody } from "@/components/challenge/completions/CompletionTBody";
+import { CompletionTBodyPrivate } from "@/components/challenge/completions/CompletionTBodyPrivate";
 
 export default function ChallengePage() {
   const params = useParams();
@@ -22,7 +23,7 @@ export default function ChallengePage() {
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const { data: challenge } = useChallenge(challengeId);
   const { data: completions } = useCompletions(challengeId);
-  const { data: logs } = useLogs(challengeId)
+  const { data: logs } = useLogs(challengeId);
   const { data: participants } = useUsers();
   const { mutateAsync: toggle } = useToggleChallenge();
 
@@ -95,7 +96,10 @@ export default function ChallengePage() {
               </p>
             </div>
 
-            <Link href={`/challenge/${challengeId}/edit`} className="absolute top-0 right-0 lg:p-4 p-2">
+            <Link
+              href={`/challenge/${challengeId}/edit`}
+              className="absolute top-0 right-0 lg:p-4 p-2"
+            >
               <PencilEdit size={32} />
             </Link>
           </div>
@@ -105,7 +109,9 @@ export default function ChallengePage() {
             <table className="table table-xs table-pin-rows table-pin-cols">
               <thead>
                 <tr>
-                  <th className="bg-base-100 z-100"></th>
+                  {challenge.visibility === "public" && (
+                    <th className="bg-base-100 z-100"></th>
+                  )}
                   {calendarDays.map((day, index) => (
                     <th key={index}>
                       <div className="flex flex-col items-center text-center">
@@ -125,54 +131,27 @@ export default function ChallengePage() {
                   ))}
                 </tr>
               </thead>
-              <tbody>
-                {(participants || [])
-                  .sort((a, b) => {
-                    if (a.id === data?.user.id) return -1;
-                    if (b.id === data?.user.id) return 1;
-                    return 0;
-                  })
-                  .map((user) => (
-                    <tr key={user.id}>
-                      <th className="bg-base-100 z-100">
-                        <div className="avatar">
-                          <div className="w-10 rounded-full">
-                            <Image
-                              width="30"
-                              height="30"
-                              src={user.image || ""}
-                              alt={user.name}
-                            />
-                          </div>
-                        </div>
-                      </th>
 
-                      {completions &&
-                        calendarDays.map((day, index) => {
-                          return (
-                            <td
-                              key={`${index}-${day.toISOString()}`}
-                              className="text-center"
-                            >
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  className="checkbox disabled:opacity-100 disabled:cursor-not-allowed"
-                                  disabled={user.id !== data?.user.id}
-                                  checked={
-                                    checked[
-                                      `${user.id}-${day.toISOString()}`
-                                    ] || false
-                                  }
-                                  onChange={() => handleChange(user.id, day)}
-                                />
-                              </label>
-                            </td>
-                          );
-                        })}
-                    </tr>
+              {data?.user &&
+                (challenge.visibility === "public" ? (
+                  <CompletionTBody
+                    calendarDays={calendarDays}
+                    participants={participants || []}
+                    checked={checked}
+                    handleChange={handleChange}
+                    completions={completions}
+                    currentUser={data.user}
+                  />
+                ) : (
+                    <CompletionTBodyPrivate
+                      calendarDays={calendarDays}
+                      checked={checked}
+                      handleChange={handleChange}
+                      completions={completions}
+                      currentUser={data.user}
+                    />
                   ))}
-              </tbody>
+
             </table>
           </div>
         </div>
@@ -186,7 +165,7 @@ export default function ChallengePage() {
                 <li key={`log-${index}`}>
                   {index > 0 && <hr />}
                   <div className="timeline-start text-sm">
-                    { format(log.createdAt, "yyyy-MM-dd HH:mm:ss") }
+                    {format(log.createdAt, "yyyy-MM-dd HH:mm:ss")}
                   </div>
                   <div className="timeline-middle">
                     <svg
@@ -207,7 +186,7 @@ export default function ChallengePage() {
                       {log.userName}
                     </span>{" "}
                     <span className="text-base-content/70">
-                      completed <span className="font-bold">{ log.date }</span>
+                      completed <span className="font-bold">{log.date}</span>
                     </span>
                   </div>
                   {index < logs.length - 1 && <hr />}

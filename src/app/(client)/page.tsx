@@ -16,14 +16,14 @@ export default function DashboardUsersPage() {
     <div className="min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <header className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
-          <div>
+        <header className="flex items-center justify-between mb-6 gap-4">
+          <div className="flex-grow">
             <h1 className="text-3xl font-bold">Battle arena</h1>
             <p className="text-sm opacity-70">
               Challenges are the heart of progress
             </p>
           </div>
-          <div className="flex items-center gap-3 w-full md:w-auto">
+          <div className="flex items-center gap-3">
             {/* <input */}
             {/*   type="search" */}
             {/*   value={query} */}

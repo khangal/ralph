@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { parseIntUlat } from "@/lib/time";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { challengeMapper } from "../utils";
 
 const updateChallengeSchema = z.object({
   title: z.string(),
@@ -22,9 +23,13 @@ export async function GET(
     return new Response("Not authenticated", { status: 401 });
   }
 
-  const challenges = await findChallenge(parseInt((await params).id));
+  const challenge = await findChallenge(parseInt((await params).id));
 
-  return NextResponse.json(challenges);
+  if (!challenge) {
+    return new Response("Challenge not found", { status: 404 });
+  }
+
+  return NextResponse.json(challengeMapper(challenge));
 }
 
 export async function PUT(
@@ -57,5 +62,5 @@ export async function PUT(
     return new Response("Challenge not found", { status: 404 });
   }
 
-  return Response.json(result);
+  return Response.json(challengeMapper(result));
 }
