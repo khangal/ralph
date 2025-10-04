@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "joinmypage",
-  description: "joinmypage for join-group.jp",
+  title: "Arise",
+  description: "Challenge Tracker",
   robots: {
     index: false,
     follow: false,
