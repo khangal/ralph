@@ -9,7 +9,7 @@ const fetchCompletions = async (challengeId: string) => {
 
 const useCompletions = (challengeId: string) => {
   return useQuery({
-    queryKey: ['completions'],
+    queryKey: ['completions', challengeId],
     queryFn: () => fetchCompletions(challengeId)
   })
 }
