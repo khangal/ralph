@@ -8,6 +8,20 @@
       "when": 1759057424991,
       "tag": "0000_quiet_captain_cross",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1759156034389,
+      "tag": "0001_condemned_ironclad",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1759573851785,
+      "tag": "0002_overjoyed_gamma_corps",
+      "breakpoints": true
     }
   ]
 }

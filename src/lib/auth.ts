@@ -23,4 +23,7 @@ export const auth = betterAuth({
     process.env.NEXT_PUBLIC_BETTER_AUTH_URL || "http://localhost:3000",
   ],
   telemetry: { enabled: false },
+  advanced: {
+    cookiePrefix: "ralph",
+  }
 });

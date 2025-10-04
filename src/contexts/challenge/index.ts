@@ -1,15 +1,28 @@
 import { db } from "@/db";
 import { CreateChallenge } from "./types";
 import { challenges, user } from "@/db/schema";
-import { desc, eq, getTableColumns } from "drizzle-orm";
+import { and, desc, eq, getTableColumns } from "drizzle-orm";
 import { firstOrNull } from "@/db/utils";
 
-export const findChallenges = async () => {
-  return await db.select({
-    ...getTableColumns(challenges),
-    owner: user.name,
-    ownerImage: user.image,
-  }).from(challenges)
+export const findPrivateChallenges = async (userId: string) => {
+  return await db
+    .select({
+      ...getTableColumns(challenges),
+    })
+    .from(challenges)
+    .where(and(eq(challenges.ownerId, userId), eq(challenges.visibility, 2)))
+    .orderBy(desc(challenges.createdAt));
+};
+
+export const findPublicChallenges = async () => {
+  return await db
+    .select({
+      ...getTableColumns(challenges),
+      owner: user.name,
+      ownerImage: user.image,
+    })
+    .from(challenges)
+    .where(eq(challenges.visibility, 1))
     .innerJoin(user, eq(challenges.ownerId, user.id))
     .orderBy(desc(challenges.createdAt));
 };

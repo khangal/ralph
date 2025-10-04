@@ -16,15 +16,16 @@ const schema = z.object({
   description: z.string().nonempty("Description is required"),
   startAt: z.string().nonempty("Start date is required"),
   endAt: z.string().nonempty("End date is required"),
+  visibility: z.enum(["public", "private"]).nullable(),
 });
 
 export default function ChallengeForm({
   challenge,
-  action
+  action,
 }: {
-    action: "create" | "edit";
-    challenge?: ChallengeFront
-  }) {
+  action: "create" | "edit";
+  challenge?: ChallengeFront;
+}) {
   const router = useRouter();
   const { mutateAsync: create } = useCreateChallenge();
   const { mutateAsync: update } = useUpdateChallenge();
@@ -37,15 +38,25 @@ export default function ChallengeForm({
     reset,
   } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: challenge ? challenge : {
-      title: "",
-      description: "",
-    },
+    defaultValues: challenge
+      ? {
+          ...challenge,
+        }
+      : {
+          title: "",
+          description: "",
+          startAt: "",
+          endAt: "",
+          visibility: "public"
+        },
   });
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
+    console.log(`-------------data---------------`)
+    console.log(data)
+    console.log(`----------------------------`)
     if (action === "edit") {
-      await update({ ...data, id: challenge!.id })
+      await update({ ...data, id: challenge!.id });
       // 👉 implement edit functionality
       router.push(`/challenge/${challenge!.id}`);
       return;
@@ -60,12 +71,11 @@ export default function ChallengeForm({
   return (
     <div className="card max-w-md w-full">
       <div className="card-body">
-        {
-          action === "edit" ? (
-            <h2 className="card-title">Edit &quot;{challenge!.title}&quot;</h2>
-          ) : <h2 className="card-title">Create New Challenge</h2>
-        }
-        
+        {action === "edit" ? (
+          <h2 className="card-title">Edit &quot;{challenge!.title}&quot;</h2>
+        ) : (
+          <h2 className="card-title">Create New Challenge</h2>
+        )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <fieldset className="fieldset">
@@ -134,15 +144,40 @@ export default function ChallengeForm({
             )}
           </fieldset>
 
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend">Visiblity</legend>
+
+            <div className="flex gap-2">
+              <input
+                className="btn"
+                value="public"
+                type="radio"
+                aria-label="Public"
+                {...register("visibility")}
+              />
+              <input
+                className="btn"
+                value="private"
+                type="radio"
+                aria-label="Private"
+                {...register("visibility")}
+              />
+            </div>
+
+            {errors.endAt && (
+              <span className="text-error text-sm mt-1">
+                {errors.endAt.message}
+              </span>
+            )}
+          </fieldset>
+
           <div className="form-control mt-6">
             <button
               type="submit"
               disabled={isSubmitting}
               className="btn btn-primary"
             >
-              {
-                action === "edit" ? "Update Challenge" : "Create Challenge"
-              }
+              {action === "edit" ? "Update Challenge" : "Create Challenge"}
             </button>
           </div>
         </form>

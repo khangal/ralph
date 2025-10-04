@@ -17,7 +17,7 @@ export function Countdown({ start, end }: { start: string; end: string }) {
     return <span className="badge badge-warning badge-sm">Starts in {d}d</span>;
   }
   if (now > endTime) {
-    return <span className="badge badge-ghost badge-sm">Ended</span>;
+    return <span className="badge badge-neutral badge-sm">Ended</span>;
   }
   const diff = endTime - now;
   const d = Math.floor(diff / (1000 * 60 * 60 * 24));

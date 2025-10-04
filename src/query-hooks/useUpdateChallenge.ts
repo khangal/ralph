@@ -39,7 +39,7 @@ export function useUpdateChallenge() {
       );
 
       // 🔄 Update challenge list cache
-      queryClient.setQueryData<ChallengeFront[]>(["challenges"], (old) => {
+      queryClient.setQueryData<ChallengeFront[]>(["challenges", "private-challenges"], (old) => {
         return old
             ? old.map((c) =>
                 c.id === updatedChallenge.id ? updatedChallenge : c

@@ -68,6 +68,7 @@ export const challenges = sqliteTable("challenges", {
   tenantId: text("tenant_id").notNull(),
   startAt: integer("start_at", { mode: "timestamp" }).notNull(),
   endAt: integer("end_at", { mode: "timestamp" }).notNull(),
+  visibility: integer("visibility").notNull().default(1), // 1 - public, 2 - private
   createdAt: integer("created_at", { mode: "timestamp" })
     .default(sql`(unixepoch())`)
     .notNull(),
@@ -123,6 +124,7 @@ export const participations = sqliteTable("participations", {
 export const tenants = sqliteTable("tenants", {
   id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
   slug: text("slug").notNull().unique(),
+  name: text("name").notNull(),
   createdAt: integer("created_at", { mode: "timestamp" })
     .default(sql`(unixepoch())`)
     .notNull(),

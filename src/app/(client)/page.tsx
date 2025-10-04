@@ -4,11 +4,13 @@ import { ChallengeListingItem } from "@/components/challenge/ChallengeListingIte
 import GitHubIcon from "@/components/icons/github";
 import { UserList } from "@/components/user/UserList";
 import { useChallenges } from "@/query-hooks/useChallenges";
+import { usePrivateChallenges } from "@/query-hooks/usePrivateChallenges";
 import Link from "next/link";
 import React from "react";
 
 export default function DashboardUsersPage() {
   const { data: challenges } = useChallenges();
+  const { data: privateChallenges } = usePrivateChallenges();
 
   return (
     <div className="min-h-screen p-6">
@@ -35,32 +37,39 @@ export default function DashboardUsersPage() {
           </div>
         </header>
 
-        <main>
-          {/* 1. Selected Challenge */}
-          {/* <section> */}
-          {/*   <div className="card bg-base-100 shadow-xl"> */}
-          {/*     <div className="card-body"> */}
-          {/*       <h2 className="card-title">Participating Challenge</h2> */}
-          {/*       <div className="text-xl font-bold">{c.title}</div> */}
-          {/*       <div className="text-sm opacity-70 mb-1">by {c.owner}</div> */}
-          {/*       <Countdown start={c.start} end={c.end} /> */}
-          {/*       <p className="mt-2 text-sm">{c.description}</p> */}
-          {/*       <div className="card-actions justify-end mt-4"> */}
-          {/*         <button className="btn btn-outline btn-primary">View Leaderboard</button> */}
-          {/*       </div> */}
-          {/*     </div> */}
-          {/*   </div> */}
-          {/* </section> */}
+        <div className="flex flex-col gap-6">
+          {privateChallenges && privateChallenges.length > 0 && (
+            <section className="space-y-3">
+              <h2 className="text-xl">Private challenges</h2>
+              {/* 2. Challenge List */}
+              <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-3">
+                {(privateChallenges || []).map((c) => (
+                  <ChallengeListingItem
+                    className="col-span-1"
+                    key={c.id}
+                    {...c}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
 
-          {/* 2. Challenge List */}
-          <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-3">
-            {(challenges || []).map((c) => (
-              <ChallengeListingItem className="col-span-1" key={c.id} {...c} />
-            ))}
-          </div>
-        </main>
+          <section className="space-y-3">
+            <h2 className="text-xl">Group challenges</h2>
+            {/* 2. Challenge List */}
+            <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-3">
+              {(challenges || []).map((c) => (
+                <ChallengeListingItem
+                  className="col-span-1"
+                  key={c.id}
+                  {...c}
+                />
+              ))}
+            </div>
+          </section>
+        </div>
 
-        <div className="divider">Challengers</div>
+        <div className="divider py-6">Challengers</div>
 
         {/* 3. Users Table */}
         <UserList className="mt-4 max-w-md mx-auto w-full" />

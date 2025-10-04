@@ -1,8 +1,9 @@
-import { createChallenge, findChallenges } from "@/contexts/challenge";
+import { createChallenge, findPublicChallenges } from "@/contexts/challenge";
 import { auth } from "@/lib/auth";
 import { parseIntUlat } from "@/lib/time";
 import { z } from "zod";
 import { NextResponse } from "next/server";
+import { challengeMapper } from "./utils";
 
 const createChallengeSchema = z.object({
   title: z.string(),
@@ -45,7 +46,7 @@ export async function GET(request: Request) {
     return new Response("Not authenticated", { status: 401 });
   }
 
-  const challenges = await findChallenges();
+  const challenges = await findPublicChallenges();
 
-  return NextResponse.json(challenges);
+  return NextResponse.json(challenges.map(challengeMapper));
 }
