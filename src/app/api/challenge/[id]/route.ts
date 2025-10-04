@@ -9,6 +9,7 @@ const updateChallengeSchema = z.object({
   description: z.string(),
   startAt: z.string(),
   endAt: z.string(),
+  visibility: z.enum(["public", "private"]),
 });
 
 export async function GET(
@@ -28,14 +29,14 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const sessionResult = await auth.api.getSession({ headers: request.headers });
 
   if (!sessionResult) {
     return new Response("Not authenticated", { status: 401 });
   }
-  const challengeId = parseInt((await params).id)
+  const challengeId = parseInt((await params).id);
 
   const body = await request.json();
 
@@ -44,7 +45,13 @@ export async function PUT(
   const startAt = parseIntUlat(parsed.startAt);
   const endAt = parseIntUlat(parsed.endAt);
 
-  const result = await updateChallenge(challengeId, { ...parsed, tenantId: "default", startAt, endAt });
+  const result = await updateChallenge(challengeId, {
+    ...parsed,
+    tenantId: "default",
+    startAt,
+    endAt,
+    visibility: parsed.visibility === "public" ? 1 : 2,
+  });
 
   if (!result) {
     return new Response("Challenge not found", { status: 404 });
@@ -52,4 +59,3 @@ export async function PUT(
 
   return Response.json(result);
 }
-

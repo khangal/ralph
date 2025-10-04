@@ -10,6 +10,7 @@ const createChallengeSchema = z.object({
   description: z.string(),
   startAt: z.string(),
   endAt: z.string(),
+  visibility: z.enum(["public", "private"]),
 });
 
 export async function POST(request: Request) {
@@ -32,6 +33,7 @@ export async function POST(request: Request) {
     startAt,
     endAt,
     ownerId: sessionResult.user.id,
+    visibility: parsed.visibility === "public" ? 1 : 2,
   });
 
   return Response.json({
