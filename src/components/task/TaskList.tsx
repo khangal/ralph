@@ -33,7 +33,7 @@ const TaskList = ({ tasks }: { tasks: Task[] }) => {
   return (
     <div className="card bg-base-200 max-w-sm mx-auto">
       <div className="card-header p-4 border-b">
-        <h2 className="card-title">Today's tasks</h2>
+        <h2 className="card-title">Today&apos;s tasks</h2>
       </div>
       <div className="card-body p-4">
         {tasksWithStatus.map((task) => (
