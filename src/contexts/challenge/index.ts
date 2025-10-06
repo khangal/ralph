@@ -1,8 +1,8 @@
 import { db } from "@/db";
-import { CreateChallenge } from "./types";
 import { challenges, user } from "@/db/schema";
-import { and, desc, eq, getTableColumns } from "drizzle-orm";
 import { firstOrNull } from "@/db/utils";
+import { and, desc, eq, getTableColumns } from "drizzle-orm";
+import { CreateChallenge } from "./types";
 
 export const findPrivateChallenges = async (userId: string) => {
   return await db

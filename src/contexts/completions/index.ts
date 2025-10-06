@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { completions } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
+import { and, eq, gte, lte } from "drizzle-orm";
 
 export type CreateCompletion = typeof completions.$inferInsert;
 export type Completion = typeof completions.$inferSelect;
@@ -43,3 +43,23 @@ export const deleteCompletion = (params: CreateCompletion) => {
       ),
     );
 };
+
+export const dayCompletions = async (userId: string, startAt: Date, endAt: Date) => {
+  return await db
+    .select({
+      id: completions.id,
+      userId: completions.userId,
+      challengeId: completions.challengeId,
+      completedAt: completions.completedAt,
+    })
+    .from(completions)
+    .where(
+      and(
+        eq(completions.userId, userId),
+        gte(completions.completedAt, startAt),
+        lte(completions.completedAt, endAt),
+        // between(completions.completedAt, startAt, endAt),
+      ),
+    )
+}
+

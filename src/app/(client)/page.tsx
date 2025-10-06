@@ -2,6 +2,7 @@
 
 import { ChallengeListingItem } from "@/components/challenge/ChallengeListingItem";
 import GitHubIcon from "@/components/icons/github";
+import TaskList from "@/components/task/TaskList";
 import { UserList } from "@/components/user/UserList";
 import { useChallenges } from "@/query-hooks/useChallenges";
 import { usePrivateChallenges } from "@/query-hooks/usePrivateChallenges";
@@ -23,6 +24,7 @@ export default function DashboardUsersPage() {
               Challenges are the heart of progress
             </p>
           </div>
+
           <div className="flex items-center gap-3">
             {/* <input */}
             {/*   type="search" */}
@@ -37,10 +39,19 @@ export default function DashboardUsersPage() {
           </div>
         </header>
 
+        <div className="mb-8">
+          <TaskList tasks={
+            [
+              ...(challenges || []).map(c => ({ challengeId: c.id, text: c.title })),
+              ...(privateChallenges || []).map(c => ({ challengeId: c.id, text: c.title }))
+            ]
+          } />
+        </div>
+
         <div className="flex flex-col gap-6">
           {privateChallenges && privateChallenges.length > 0 && (
             <section className="space-y-3">
-              <h2 className="text-xl">Private challenges</h2>
+              <h2 className="text-xl">For only me</h2>
               {/* 2. Challenge List */}
               <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-3">
                 {(privateChallenges || []).map((c) => (

@@ -24,7 +24,7 @@ export async function POST(
   const body = await request.json();
   const parsed = createCompletionSchema.parse(body);
 
-  await deleteCompletion({
+  const result = await deleteCompletion({
     tenantId: "default",
     challengeId,
     userId: sessionResult.user.id,
