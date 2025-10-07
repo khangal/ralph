@@ -43,8 +43,8 @@ const TaskList = ({ tasks }: { tasks: Task[] }) => {
               className={`
                 flex items-center w-full cursor-pointer select-none text-lg 
                 transition-colors duration-150 
-                hover:bg-base-300 rounded-xl
-                p-4
+                hover:bg-base-100 rounded-xl
+                py-2 px-4
               `}
             >
               <input
