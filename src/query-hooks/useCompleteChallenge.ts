@@ -1,4 +1,5 @@
 import { ChallengeFront } from "@/contexts/challenge/types";
+import { CompletionFront } from "@/contexts/completions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export type CompleteChallengeInput = {
@@ -74,12 +75,33 @@ export function useToggleChallenge() {
       // Snapshot the previous state
       const previousDayCompletions = queryClient.getQueryData(["day-completions"]);
 
-      queryClient.setQueryData(["day-completions"], (old: string[] | undefined) => {
+      queryClient.setQueryData(["day-completions"], (old: CompletionFront[] | undefined) => {
         if (!old) return old;
-        const date = formatDate(newData.date || new Date());
-        return newData.currentValue === "off"
-          ? [...old, `${newData.challengeId}:${date}`]
-          : old.filter((item) => item !== `${newData.challengeId}:${date}`);
+      
+        if (newData.currentValue === "off") {
+          // Add new completion
+          return [
+            ...old,
+            {
+              id: "temp-id", // Temporary ID, replace with real one from server if needed
+              userId: "current-user", // Replace with actual current user ID if available
+              challengeId: newData.challengeId,
+              completedAt: newData.date ? new Date(newData.date) : new Date(),
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+          ];
+        } else {
+          // Remove completion
+          return old.filter(
+            (completion) =>
+              !(
+                completion.challengeId === newData.challengeId &&
+                formatDate(new Date(completion.completedAt)) ===
+                  (newData.date ? formatDate(new Date(newData.date)) : formatDate(new Date()))
+              ),
+          );
+        }
       });
 
       // Return context with previous state for rollback
