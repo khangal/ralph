@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { CompletionTBody } from "@/components/challenge/completions/CompletionTBody";
 import { CompletionTBodyPrivate } from "@/components/challenge/completions/CompletionTBodyPrivate";
+import { customDateFormat } from "@/lib/time";
 
 export default function ChallengePage() {
   const params = useParams();
@@ -62,7 +63,7 @@ export default function ChallengePage() {
     await toggle({
       currentValue: checked[key] ? "on" : "off",
       challengeId,
-      date: date
+      date: customDateFormat(date)
     });
   };
 

@@ -18,3 +18,7 @@ export const startOfDayUlat = (date: Date) => {
 export const endOfDayUlat = (date: Date) => {
   return toZonedTime(endOfDay(date), timeZone)
 }
+
+export const customDateFormat = (date: Date) => {
+  return format(date, "yyyy-MM-dd");
+};

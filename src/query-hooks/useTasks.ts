@@ -17,7 +17,7 @@ const fetchDayCompletions = async (date: string) => {
 
 const useDayCompletions = (date: string) => {
   return useQuery({
-    queryKey: ['day-completions'],
+    queryKey: ['day-completions', date],
     queryFn: () => fetchDayCompletions(date)
   })
 }

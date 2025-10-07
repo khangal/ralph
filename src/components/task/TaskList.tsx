@@ -2,6 +2,7 @@ import { useToggleChallenge } from "@/query-hooks/useCompleteChallenge";
 import { useDayCompletions } from "@/query-hooks/useTasks";
 import React, { useState } from "react";
 import { format, subDays, addDays, isSameDay, startOfDay } from "date-fns";
+import { customDateFormat } from "@/lib/time";
 
 type Task = {
   challengeId: number;
@@ -12,14 +13,10 @@ type TaskWithStatus = Task & {
   completed: boolean;
 };
 
-const formatDate = (date: Date) => {
-  return format(date, "yyyy-MM-dd");
-};
-
 const TaskList = ({ tasks }: { tasks: Task[] }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const { mutateAsync: toggle } = useToggleChallenge();
-  const { data: completions } = useDayCompletions(formatDate(currentDate));
+  const { data: completions } = useDayCompletions(customDateFormat(currentDate));
 
   const tasksWithStatus = (tasks || []).map((task) => ({
     ...task,
@@ -33,6 +30,7 @@ const TaskList = ({ tasks }: { tasks: Task[] }) => {
     await toggle({
       challengeId: task.challengeId.toString(),
       currentValue: task.completed ? "on" : "off",
+      date: customDateFormat(currentDate),
     });
   };
 
