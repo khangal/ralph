@@ -52,9 +52,6 @@ export default function ChallengeForm({
   });
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
-    console.log(`-------------data---------------`)
-    console.log(data)
-    console.log(`----------------------------`)
     if (action === "edit") {
       await update({ ...data, id: challenge!.id });
       // 👉 implement edit functionality
