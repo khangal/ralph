@@ -4,7 +4,7 @@ import { and, eq, gte, lte } from "drizzle-orm";
 
 export type CreateCompletion = typeof completions.$inferInsert;
 export type Completion = typeof completions.$inferSelect;
-export type CompletionFront = typeof completions.$inferSelect & {
+export type CompletionFront = Omit<Completion, "completedAt"> & {
   completedAt: string;
   createdAt: string;
   updatedAt: string;

@@ -1,6 +1,6 @@
 import { ChallengeFront } from "@/contexts/challenge/types";
 import { CompletionFront } from "@/contexts/completions";
-import { customDateFormat } from "@/lib/time";
+import { toDateString } from "@/lib/time";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export type CompleteChallengeInput = {
@@ -90,10 +90,10 @@ export function useToggleChallenge() {
               (completion) =>
                 !(
                   completion.challengeId === newData.challengeId &&
-                  customDateFormat(new Date(completion.completedAt)) ===
+                  toDateString(new Date(completion.completedAt)) ===
                     (newData.date
-                      ? customDateFormat(new Date(newData.date))
-                      : customDateFormat(new Date()))
+                      ? toDateString(new Date(newData.date))
+                      : toDateString(new Date()))
                 ),
             );
           }

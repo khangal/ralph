@@ -1,6 +1,6 @@
 import { createChallenge, findPublicChallenges } from "@/contexts/challenge";
 import { auth } from "@/lib/auth";
-import { parseIntUlat } from "@/lib/time";
+import { parseIntUtc } from "@/lib/time";
 import { z } from "zod";
 import { NextResponse } from "next/server";
 import { challengeMapper } from "./utils";
@@ -24,8 +24,8 @@ export async function POST(request: Request) {
 
   const parsed = createChallengeSchema.parse(body);
 
-  const startAt = parseIntUlat(parsed.startAt);
-  const endAt = parseIntUlat(parsed.endAt);
+  const startAt = parseIntUtc(parsed.startAt);
+  const endAt = parseIntUtc(parsed.endAt);
 
   await createChallenge({
     ...parsed,

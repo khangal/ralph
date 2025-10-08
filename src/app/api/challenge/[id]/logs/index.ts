@@ -3,7 +3,7 @@ import {
   findCompletionsByChallengeId,
 } from "@/contexts/completions";
 import { auth } from "@/lib/auth";
-import { parseIntUlat } from "@/lib/time";
+import { parseIntUtc } from "@/lib/time";
 import { z } from "zod";
 import { NextRequest } from "next/server";
 
@@ -30,7 +30,7 @@ export async function POST(
     tenantId: "default",
     challengeId,
     userId: sessionResult.user.id,
-    completedAt: parseIntUlat(parsed.date),
+    completedAt: parseIntUtc(parsed.date),
   });
 
   return Response.json({

@@ -2,7 +2,7 @@ import { useToggleChallenge } from "@/query-hooks/useCompleteChallenge";
 import { useDayCompletions } from "@/query-hooks/useTasks";
 import React, { useState } from "react";
 import { format, subDays, addDays, isSameDay, startOfDay } from "date-fns";
-import { customDateFormat } from "@/lib/time";
+import { toDateString } from "@/lib/time";
 
 type Task = {
   challengeId: number;
@@ -17,7 +17,7 @@ const TaskList = ({ tasks }: { tasks: Task[] }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const { mutateAsync: toggle } = useToggleChallenge();
   const { data: completions, isLoading } = useDayCompletions(
-    customDateFormat(currentDate),
+    toDateString(currentDate),
   );
 
   const tasksWithStatus = (tasks || []).map((task) => ({
@@ -32,7 +32,7 @@ const TaskList = ({ tasks }: { tasks: Task[] }) => {
     await toggle({
       challengeId: task.challengeId.toString(),
       currentValue: task.completed ? "on" : "off",
-      date: customDateFormat(currentDate),
+      date: toDateString(currentDate),
     });
   };
 
@@ -96,7 +96,7 @@ const TaskList = ({ tasks }: { tasks: Task[] }) => {
 
         <div className="flex flex-col items-center flex-1">
           <span className="card-title text-xl font-semibold text-center">
-            {customDateFormat(currentDate)}
+            {toDateString(currentDate)}
           </span>
           <span className="text-sm text-base-content/70 mt-1">
             {weekday}

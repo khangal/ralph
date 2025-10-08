@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { completions, user } from "@/db/schema";
-import { formatToUlatDate } from "@/lib/time";
+import { toDateString } from "@/lib/time";
 import { desc, eq } from "drizzle-orm";
 
 export type LogFront = {
@@ -30,7 +30,7 @@ export const findLogsByChallengeId = async (challengeId: string) => {
 
   return result.map(log => ({
     ...log,
-    date: formatToUlatDate(log.completedAt)
+    date: toDateString(log.completedAt)
   }))
 };
 

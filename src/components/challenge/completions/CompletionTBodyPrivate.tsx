@@ -1,3 +1,5 @@
+import { toDateString } from "@/lib/time";
+
 export const CompletionTBodyPrivate = ({
   calendarDays,
   checked,
@@ -17,12 +19,12 @@ export const CompletionTBodyPrivate = ({
         {completions &&
           calendarDays.map((day, index) => {
             return (
-              <td key={`${index}-${day.toISOString()}`} className="text-center">
+              <td key={`${index}-${toDateString(day)}`} className="text-center">
                 <label>
                   <input
                     type="checkbox"
                     className="checkbox disabled:opacity-100 disabled:cursor-not-allowed"
-                    checked={checked[`${currentUser.id}-${day.toISOString()}`] || false}
+                    checked={checked[`${currentUser.id}-${toDateString(day)}`] || false}
                     onChange={() => handleChange(currentUser.id, day)}
                   />
                 </label>

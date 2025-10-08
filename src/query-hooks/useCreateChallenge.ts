@@ -4,8 +4,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 export type ChallengeInput = {
   title: string;
   description: string;
-  startAt: string;
-  endAt: string;
+  startAt: Date;
+  endAt: Date;
 };
 
 async function createChallenge(data: ChallengeInput): Promise<ChallengeFront> {

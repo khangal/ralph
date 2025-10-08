@@ -1,4 +1,5 @@
 import { User } from "@/contexts/user/types";
+import { toDateString } from "@/lib/time";
 import Image from "next/image";
 
 export const CompletionTBody = ({
@@ -43,9 +44,10 @@ export const CompletionTBody = ({
               calendarDays.map((day, index) => {
                 return (
                   <td
-                    key={`${index}-${day.toISOString()}`}
+                    key={`${index}-${toDateString(day)}`}
                     className="text-center"
                   >
+                      {toDateString(day)}
                     <label>
                       <input
                         type="checkbox"
@@ -53,7 +55,7 @@ export const CompletionTBody = ({
                         disabled={user.id !== currentUser.id}
                         checked={
                           checked[
-                            `${user.id}-${day.toISOString()}`
+                            `${user.id}-${toDateString(day)}`
                           ] || false
                         }
                         onChange={() => handleChange(user.id, day)}

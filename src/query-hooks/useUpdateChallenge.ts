@@ -5,8 +5,8 @@ export type UpdateChallenge = {
   id: number;
   title: string;
   description: string;
-  startAt: string;
-  endAt: string;
+  startAt: Date;
+  endAt: Date;
 };
 
 async function updateChallenge(data: UpdateChallenge): Promise<ChallengeFront> {

@@ -3,9 +3,9 @@ import {
   findCompletionsByChallengeId,
 } from "@/contexts/completions";
 import { auth } from "@/lib/auth";
-import { parseIntUlat } from "@/lib/time";
 import { z } from "zod";
 import { NextRequest } from "next/server";
+import { completionMapper } from "@/contexts/completions/utils";
 
 const createCompletionSchema = z.object({
   date: z.string(),
@@ -30,7 +30,7 @@ export async function POST(
     tenantId: "default",
     challengeId,
     userId: sessionResult.user.id,
-    completedAt: parseIntUlat(parsed.date),
+    completedAt: new Date(parsed.date),
   });
 
   return Response.json({
@@ -50,5 +50,5 @@ export async function GET(
 
   const completions = await findCompletionsByChallengeId((await params).id);
 
-  return Response.json(completions);
+  return Response.json(completions.map(completionMapper));
 }

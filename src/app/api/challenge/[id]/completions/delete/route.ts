@@ -2,7 +2,6 @@ import {
   deleteCompletion,
 } from "@/contexts/completions";
 import { auth } from "@/lib/auth";
-import { parseIntUlat } from "@/lib/time";
 import { z } from "zod";
 
 const createCompletionSchema = z.object({
@@ -28,7 +27,7 @@ export async function POST(
     tenantId: "default",
     challengeId,
     userId: sessionResult.user.id,
-    completedAt: parseIntUlat(parsed.date),
+    completedAt: new Date(parsed.date),
   });
 
   return Response.json({

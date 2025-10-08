@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { CompletionTBody } from "@/components/challenge/completions/CompletionTBody";
 import { CompletionTBodyPrivate } from "@/components/challenge/completions/CompletionTBodyPrivate";
-import { customDateFormat } from "@/lib/time";
+import { toDateString } from "@/lib/time";
 
 export default function ChallengePage() {
   const params = useParams();
@@ -33,7 +33,7 @@ export default function ChallengePage() {
 
     const completionsMapped = completions.reduce(
       (acc, curr) => {
-        const key = `${curr.userId}-${new Date(curr.completedAt).toISOString()}`;
+        const key = `${curr.userId}-${curr.completedAt}`;
         acc[key] = true;
         return acc;
       },
@@ -52,7 +52,7 @@ export default function ChallengePage() {
   }
 
   const handleChange = async (userId: string, date: Date) => {
-    const key = `${userId}-${date.toISOString()}`;
+    const key = `${userId}-${toDateString(date)}`;
 
     // toggle state
     setChecked((prev) => ({
@@ -63,7 +63,7 @@ export default function ChallengePage() {
     await toggle({
       currentValue: checked[key] ? "on" : "off",
       challengeId,
-      date: customDateFormat(date)
+      date: toDateString(date)
     });
   };
 

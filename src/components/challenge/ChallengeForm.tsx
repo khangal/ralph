@@ -47,19 +47,28 @@ export default function ChallengeForm({
           description: "",
           startAt: "",
           endAt: "",
-          visibility: "public"
+          visibility: "public",
         },
   });
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
     if (action === "edit") {
-      await update({ ...data, id: challenge!.id });
+      await update({
+        ...data,
+        id: challenge!.id,
+        startAt: new Date(data.startAt),
+        endAt: new Date(data.endAt),
+      });
       // 👉 implement edit functionality
       router.push(`/challenge/${challenge!.id}`);
       return;
     }
 
-    await create(data);
+    await create({
+      ...data,
+      startAt: new Date(data.startAt),
+      endAt: new Date(data.endAt),
+    });
     reset();
 
     router.push("/");

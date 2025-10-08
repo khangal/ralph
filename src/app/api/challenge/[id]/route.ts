@@ -1,6 +1,6 @@
 import { findChallenge, updateChallenge } from "@/contexts/challenge";
 import { auth } from "@/lib/auth";
-import { parseIntUlat } from "@/lib/time";
+import { parseIntUtc } from "@/lib/time";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { challengeMapper } from "../utils";
@@ -47,8 +47,8 @@ export async function PUT(
 
   const parsed = updateChallengeSchema.parse(body);
 
-  const startAt = parseIntUlat(parsed.startAt);
-  const endAt = parseIntUlat(parsed.endAt);
+  const startAt = parseIntUtc(parsed.startAt);
+  const endAt = parseIntUtc(parsed.endAt);
 
   const result = await updateChallenge(challengeId, {
     ...parsed,

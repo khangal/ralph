@@ -1,4 +1,5 @@
 import { dayCompletions } from "@/contexts/completions";
+import { completionMapper } from "@/contexts/completions/utils";
 import { auth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -30,5 +31,5 @@ export async function GET(request: NextRequest) {
     new Date(endAt),
   );
 
-  return NextResponse.json(completions);
+  return NextResponse.json(completions.map(completionMapper));
 }
