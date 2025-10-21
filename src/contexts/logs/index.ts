@@ -19,12 +19,10 @@ export const findLogsByChallengeId = async (challengeId: string) => {
       id: completions.id,
       userId: completions.userId,
       challengeId: completions.challengeId,
-      userName: user.name,
       completedAt: completions.completedAt,
       createdAt: completions.createdAt,
     })
     .from(completions)
-    .innerJoin(user, eq(user.id, completions.userId))
     .where(eq(completions.challengeId, challengeId))
     .orderBy(desc(completions.createdAt));
 

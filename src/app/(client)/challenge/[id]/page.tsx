@@ -27,6 +27,11 @@ export default function ChallengePage() {
   const { data: participants } = useUsers();
   const { mutateAsync: toggle } = useToggleChallenge();
 
+  const participantsMap = (participants || []).reduce((acc, user) => {
+    acc[user.id] = user.name;
+    return acc;
+  }, {} as Record<string, string>);
+
   useEffect(() => {
     if (!completions) return;
 
@@ -120,54 +125,6 @@ export default function ChallengePage() {
                     />
                   ))
                 }
-
-                {/* <table className="table table-xs table-pin-rows table-pin-cols"> */}
-                {/*   <thead> */}
-                {/*     <tr> */}
-                {/*       {challenge.visibility === "public" && ( */}
-                {/*         <th className="bg-base-100 z-100"></th> */}
-                {/*       )} */}
-                {/*       {calendarDays.map((day, index) => ( */}
-                {/*         <th key={index}> */}
-                {/*           <div className="flex flex-col items-center text-center"> */}
-                {/*             <span> */}
-                {/*               {day.toLocaleDateString("en-US", { month: "short" })} */}
-                {/*             </span> */}
-                {/*             <span className="text-base-content"> */}
-                {/*               {day.toLocaleDateString("en-US", { day: "2-digit" })} */}
-                {/*             </span> */}
-                {/*             <span> */}
-                {/*               {day.toLocaleDateString("en-US", { */}
-                {/*                 weekday: "short", */}
-                {/*               })} */}
-                {/*             </span> */}
-                {/*           </div> */}
-                {/*         </th> */}
-                {/*       ))} */}
-                {/*     </tr> */}
-                {/*   </thead> */}
-                {/**/}
-                {/*   {data?.user && */}
-                {/*     (challenge.visibility === "public" ? ( */}
-                {/*       <CompletionTBody */}
-                {/*         calendarDays={calendarDays} */}
-                {/*         participants={participants || []} */}
-                {/*         checked={checked} */}
-                {/*         handleChange={handleChange} */}
-                {/*         completions={completions} */}
-                {/*         currentUser={data.user} */}
-                {/*       /> */}
-                {/*     ) : ( */}
-                {/*         <CompletionTBodyPrivate */}
-                {/*           calendarDays={calendarDays} */}
-                {/*           checked={checked} */}
-                {/*           handleChange={handleChange} */}
-                {/*           completions={completions} */}
-                {/*           currentUser={data.user} */}
-                {/*         /> */}
-                {/*       ))} */}
-                {/**/}
-                {/* </table> */}
               </div>
             )
           }
@@ -200,7 +157,7 @@ export default function ChallengePage() {
                   </div>
                   <div className="timeline-end timeline-box">
                     <span className="font-semibold text-primary">
-                      {log.userName}
+                      {participantsMap[log.userId]}
                     </span>{" "}
                     <span className="text-base-content/70">
                       <span className="font-bold">{log.date}</span>
