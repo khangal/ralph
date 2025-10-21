@@ -50,7 +50,7 @@ export const Weekday = ({
                   key={dayIdx}
                   onClick={() => handleToggle(session?.user.id, day.value)}
                   className={`btn btn-circle btn-sm disabled:pointer-events-none ${day.checked ? "btn-primary text-white" : "btn-outline" }`}
-                  disabled={session?.user.id === user.id}
+                  disabled={session?.user.id !== user.id}
                 >
                   {day.value.getDate()}
                 </button>
