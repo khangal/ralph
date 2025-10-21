@@ -1,19 +1,18 @@
 "use client";
 
 import PencilEdit from "@/components/icons/pencil-edit";
+import { WeekdayWrapper } from "@/components/task/WeekdayWrapper";
 import { authClient } from "@/lib/auth-client";
+import { toDateString } from "@/lib/time";
 import { useChallenge } from "@/query-hooks/useChallenge";
 import { useToggleChallenge } from "@/query-hooks/useCompleteChallenge";
 import { useCompletions } from "@/query-hooks/useCompletions";
 import { useLogs } from "@/query-hooks/useLogs";
 import { useUsers } from "@/query-hooks/useUsers";
+import { format } from "date-fns";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { format } from "date-fns";
-import { CompletionTBody } from "@/components/challenge/completions/CompletionTBody";
-import { CompletionTBodyPrivate } from "@/components/challenge/completions/CompletionTBodyPrivate";
-import { toDateString } from "@/lib/time";
 
 export default function ChallengePage() {
   const params = useParams();
@@ -63,7 +62,7 @@ export default function ChallengePage() {
     await toggle({
       currentValue: checked[key] ? "on" : "off",
       challengeId,
-      date: toDateString(date)
+      date: toDateString(date),
     });
   };
 
@@ -101,55 +100,77 @@ export default function ChallengePage() {
           </div>
 
           {/* Progress Calendar */}
-          <div className="overflow-x-auto">
-            <table className="table table-xs table-pin-rows table-pin-cols">
-              <thead>
-                <tr>
-                  {challenge.visibility === "public" && (
-                    <th className="bg-base-100 z-100"></th>
-                  )}
-                  {calendarDays.map((day, index) => (
-                    <th key={index}>
-                      <div className="flex flex-col items-center text-center">
-                        <span>
-                          {day.toLocaleDateString("en-US", { month: "short" })}
-                        </span>
-                        <span className="text-base-content">
-                          {day.toLocaleDateString("en-US", { day: "2-digit" })}
-                        </span>
-                        <span>
-                          {day.toLocaleDateString("en-US", {
-                            weekday: "short",
-                          })}
-                        </span>
-                      </div>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-
-              {data?.user &&
-                (challenge.visibility === "public" ? (
-                  <CompletionTBody
-                    calendarDays={calendarDays}
-                    participants={participants || []}
-                    checked={checked}
-                    handleChange={handleChange}
-                    completions={completions}
-                    currentUser={data.user}
-                  />
-                ) : (
-                    <CompletionTBodyPrivate
-                      calendarDays={calendarDays}
-                      checked={checked}
-                      handleChange={handleChange}
-                      completions={completions}
-                      currentUser={data.user}
+          {
+            data && (
+              <div>
+                {
+                  (participants || []).sort((a, b) => {
+                    if (a.id === data.user.id) return -1;
+                    if (b.id === data.user.id) return 1;
+                    return 0;
+                  }).map((user) => (
+                    <WeekdayWrapper
+                      key={user.id}
+                      user={user}
+                      handleToggle={handleChange}
+                      days={calendarDays.map((date) => ({
+                        value: date,
+                        checked: checked[`${user.id}-${toDateString(date)}`] || false,
+                      }))}
                     />
-                  ))}
+                  ))
+                }
 
-            </table>
-          </div>
+                {/* <table className="table table-xs table-pin-rows table-pin-cols"> */}
+                {/*   <thead> */}
+                {/*     <tr> */}
+                {/*       {challenge.visibility === "public" && ( */}
+                {/*         <th className="bg-base-100 z-100"></th> */}
+                {/*       )} */}
+                {/*       {calendarDays.map((day, index) => ( */}
+                {/*         <th key={index}> */}
+                {/*           <div className="flex flex-col items-center text-center"> */}
+                {/*             <span> */}
+                {/*               {day.toLocaleDateString("en-US", { month: "short" })} */}
+                {/*             </span> */}
+                {/*             <span className="text-base-content"> */}
+                {/*               {day.toLocaleDateString("en-US", { day: "2-digit" })} */}
+                {/*             </span> */}
+                {/*             <span> */}
+                {/*               {day.toLocaleDateString("en-US", { */}
+                {/*                 weekday: "short", */}
+                {/*               })} */}
+                {/*             </span> */}
+                {/*           </div> */}
+                {/*         </th> */}
+                {/*       ))} */}
+                {/*     </tr> */}
+                {/*   </thead> */}
+                {/**/}
+                {/*   {data?.user && */}
+                {/*     (challenge.visibility === "public" ? ( */}
+                {/*       <CompletionTBody */}
+                {/*         calendarDays={calendarDays} */}
+                {/*         participants={participants || []} */}
+                {/*         checked={checked} */}
+                {/*         handleChange={handleChange} */}
+                {/*         completions={completions} */}
+                {/*         currentUser={data.user} */}
+                {/*       /> */}
+                {/*     ) : ( */}
+                {/*         <CompletionTBodyPrivate */}
+                {/*           calendarDays={calendarDays} */}
+                {/*           checked={checked} */}
+                {/*           handleChange={handleChange} */}
+                {/*           completions={completions} */}
+                {/*           currentUser={data.user} */}
+                {/*         /> */}
+                {/*       ))} */}
+                {/**/}
+                {/* </table> */}
+              </div>
+            )
+          }
         </div>
 
         <div className="divider">Timeline</div>
@@ -182,7 +203,7 @@ export default function ChallengePage() {
                       {log.userName}
                     </span>{" "}
                     <span className="text-base-content/70">
-                      completed <span className="font-bold">{log.date}</span>
+                      <span className="font-bold">{log.date}</span>
                     </span>
                   </div>
                   {index < logs.length - 1 && <hr />}
