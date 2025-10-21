@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { completions, user } from "@/db/schema";
+import { completions } from "@/db/schema";
 import { toDateString } from "@/lib/time";
 import { desc, eq } from "drizzle-orm";
 
