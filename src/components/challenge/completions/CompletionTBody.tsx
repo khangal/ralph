@@ -47,7 +47,6 @@ export const CompletionTBody = ({
                     key={`${index}-${toDateString(day)}`}
                     className="text-center"
                   >
-                      {toDateString(day)}
                     <label>
                       <input
                         type="checkbox"

@@ -78,6 +78,23 @@ export const challenges = sqliteTable("challenges", {
     .$onUpdate(() => new Date()),
 });
 
+export const tasks = sqliteTable("tasks", {
+  id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  description: text("description"),
+  ownerId: text("owner_id").notNull().references(() => user.id),
+  tenantId: text("tenant_id").notNull(),
+  dueAt: integer("due_at", { mode: "timestamp" }),
+  completedAt: integer("completed_at", { mode: "timestamp" }),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`)
+    .$onUpdate(() => new Date()),
+});
+
 export const completions = sqliteTable(
   "completions",
   {
@@ -103,15 +120,9 @@ export const completions = sqliteTable(
   ],
 );
 
-export const participations = sqliteTable("participations", {
+export const groups = sqliteTable("groups", {
   id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id),
-  challengeId: text("challenge_id")
-    .notNull()
-    .references(() => challenges.id),
-  tenantId: text("tenant_id").notNull(),
+  name: text("name").notNull(),
   createdAt: integer("created_at", { mode: "timestamp" })
     .default(sql`(unixepoch())`)
     .notNull(),
