@@ -1,0 +1,1 @@
+CREATE INDEX `completions_challenge_created_at_idx` ON `completions` (`challenge_id`,`created_at`);

@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { integer, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
+import { index, integer, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
 
 export const user = sqliteTable("user", {
   id: text("id").primaryKey(),
@@ -117,6 +117,7 @@ export const completions = sqliteTable(
   },
   (t) => [
     unique().on(t.userId, t.challengeId, t.completedAt),
+    index("completions_challenge_created_at_idx").on(t.challengeId, t.createdAt)
   ],
 );
 
