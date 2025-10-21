@@ -102,7 +102,7 @@ export default function ChallengePage() {
           {/* Progress Calendar */}
           {
             data && (
-              <div>
+              <div className="space-y-4">
                 {
                   (participants || []).sort((a, b) => {
                     if (a.id === data.user.id) return -1;
