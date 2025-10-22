@@ -9,7 +9,7 @@ const fetchLogs = async (challengeId: string) => {
 
 const useLogs = (challengeId: string) => {
   return useQuery({
-    queryKey: ['logs'],
+    queryKey: ['logs', challengeId],
     queryFn: () => fetchLogs(challengeId)
   })
 }

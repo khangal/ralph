@@ -9,7 +9,7 @@
 }
 
 .btn.no-disabled-color.btn-outline:disabled {
-  background-color: transparent !important;
-  border-color: var(--color-base-content) !important;
+  /* background-color: transparent !important; */
+  /* border-color: var(--color-base-content) !important; */
   /* outline-color: var(--btn-fg, var(--color-base-content)); */
 }
