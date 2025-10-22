@@ -2,3 +2,14 @@
 @plugin "daisyui" {
   themes: light --default, dark --prefersdark, halloween;
 }
+
+.btn.no-disabled-color:disabled {
+  color: var(--color-white) !important;
+  background-color: var(--btn-bg) !important;
+}
+
+.btn.no-disabled-color.btn-outline:disabled {
+  background-color: transparent !important;
+  border-color: var(--color-base-content) !important;
+  /* outline-color: var(--btn-fg, var(--color-base-content)); */
+}

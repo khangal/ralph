@@ -1,4 +1,5 @@
 import { authClient } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 export const Weekday = ({
@@ -12,25 +13,14 @@ export const Weekday = ({
 }) => {
   const { data: session } = authClient.useSession()
 
+  const handleClick = (date: Date) => {
+    if (session?.user.id) {
+      handleToggle(session.user.id, date);
+    }
+  }
+
   return (
     <div className="space-y-3">
-            {/*       {calendarDays.map((day, index) => ( */}
-            {/*         <th key={index}> */}
-            {/*           <div className="flex flex-col items-center text-center"> */}
-            {/*             <span> */}
-            {/*               {day.toLocaleDateString("en-US", { month: "short" })} */}
-            {/*             </span> */}
-            {/*             <span className="text-base-content"> */}
-            {/*               {day.toLocaleDateString("en-US", { day: "2-digit" })} */}
-            {/*             </span> */}
-            {/*             <span> */}
-            {/*               {day.toLocaleDateString("en-US", { */}
-            {/*                 weekday: "short", */}
-            {/*               })} */}
-            {/*             </span> */}
-            {/*           </div> */}
-            {/*         </th> */}
-            {/*       ))} */}
       {
         session?.user.id && (
           <div className="flex gap-2 items-center w-full">
@@ -48,9 +38,10 @@ export const Weekday = ({
               {days.map((day, dayIdx) => (
                 <button
                   key={dayIdx}
-                  onClick={() => handleToggle(session?.user.id, day.value)}
-                  className={`btn btn-circle btn-sm disabled:pointer-events-none ${day.checked ? "btn-primary text-white" : "btn-outline" }`}
-                  disabled={session?.user.id !== user.id}
+                  onClick={() => handleClick(day.value)}
+                  className={cn(`btn btn-circle btn-sm no-disabled-color`, day.checked ? "btn-primary text-white" : "btn-outline")}
+                  aria-disabled={day.checked}
+                  disabled={session.user.id !== user.id}
                 >
                   {day.value.getDate()}
                 </button>
