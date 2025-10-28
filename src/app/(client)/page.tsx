@@ -7,7 +7,6 @@ import { UserList } from "@/components/user/UserList";
 import { useChallenges } from "@/query-hooks/useChallenges";
 import { usePrivateChallenges } from "@/query-hooks/usePrivateChallenges";
 import Link from "next/link";
-import React from "react";
 
 export default function DashboardUsersPage() {
   const { data: challenges } = useChallenges();
@@ -40,12 +39,27 @@ export default function DashboardUsersPage() {
         </header>
 
         <div className="mb-8">
-          <TaskList tasks={
-            [
-              ...(challenges || []).map(c => ({ challengeId: c.id, text: c.title })),
-              ...(privateChallenges || []).map(c => ({ challengeId: c.id, text: c.title }))
-            ]
-          } />
+          <TaskList
+            tasks={[
+              ...(challenges || [])
+                .filter(
+                  (c) =>
+                    new Date() >= new Date(c.startAt) &&
+                    new Date() <= new Date(c.endAt),
+                )
+                .map((c) => ({
+                  challengeId: c.id,
+                  text: c.title,
+                })),
+              ...(privateChallenges || [])
+                .filter(
+                  (c) =>
+                    new Date() >= new Date(c.startAt) &&
+                    new Date() <= new Date(c.endAt),
+                )
+                .map((c) => ({ challengeId: c.id, text: c.title })),
+            ]}
+          />
         </div>
 
         <div className="flex flex-col gap-6">

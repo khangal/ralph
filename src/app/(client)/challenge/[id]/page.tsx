@@ -24,13 +24,24 @@ export default function ChallengePage() {
   const { data: challenge } = useChallenge(challengeId);
   const { data: completions } = useCompletions(challengeId);
   const { data: logs } = useLogs(challengeId);
-  const { data: participants } = useUsers();
+  const { data: users } = useUsers();
   const { mutateAsync: toggle } = useToggleChallenge();
 
-  const participantsMap = (participants || []).reduce((acc, user) => {
-    acc[user.id] = user.name;
-    return acc;
-  }, {} as Record<string, string>);
+  const participants = (users || [])
+    .filter(
+      (u) =>
+        challenge?.visibility === "public" ||
+        (challenge?.visibility === "private" && u.id === challenge?.ownerId),
+    )
+
+  const participantsMap = participants
+    .reduce(
+      (acc, user) => {
+        acc[user.id] = user.name;
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
 
   useEffect(() => {
     if (!completions) return;
@@ -105,29 +116,28 @@ export default function ChallengePage() {
           </div>
 
           {/* Progress Calendar */}
-          {
-            data && (
-              <div className="space-y-4">
-                {
-                  (participants || []).sort((a, b) => {
-                    if (a.id === data.user.id) return -1;
-                    if (b.id === data.user.id) return 1;
-                    return 0;
-                  }).map((user) => (
-                    <WeekdayWrapper
-                      key={user.id}
-                      user={user}
-                      handleToggle={handleChange}
-                      days={calendarDays.map((date) => ({
-                        value: date,
-                        checked: checked[`${user.id}-${toDateString(date)}`] || false,
-                      }))}
-                    />
-                  ))
-                }
-              </div>
-            )
-          }
+          {data && (
+            <div className="space-y-4">
+              {(participants || [])
+                .sort((a, b) => {
+                  if (a.id === data.user.id) return -1;
+                  if (b.id === data.user.id) return 1;
+                  return 0;
+                })
+                .map((user) => (
+                  <WeekdayWrapper
+                    key={user.id}
+                    user={user}
+                    handleToggle={handleChange}
+                    days={calendarDays.map((date) => ({
+                      value: date,
+                      checked:
+                        checked[`${user.id}-${toDateString(date)}`] || false,
+                    }))}
+                  />
+                ))}
+            </div>
+          )}
         </div>
 
         <div className="divider">Timeline</div>
